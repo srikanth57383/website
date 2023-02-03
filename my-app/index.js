@@ -92,7 +92,7 @@ const jwt = require('jsonwebtoken');
 
 
 const app = express();
- mongoose.connect('mongodb+srv://Srikanth:Srikanth@cluster0.rhxu4vr.mongodb.net/?retryWrites=true&w=majority').then(
+ mongoose.connect('mongodb+srv://Srikanth:Srikanth@cluster0.ecee6vq.mongodb.net/?retryWrites=true&w=majority').then(
   ()=>console.log("DB Connected")
  )
 
