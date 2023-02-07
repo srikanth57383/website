@@ -85,36 +85,36 @@
 const express = require('express');
 const { default: mongoose } = require('mongoose');
 const mongooes = require('mongoose');
-const Registeruser = require ('./model');
+const Registeruser = require('./model');
 const cors = require("cors");
 const middleware = require("./middleware");
 const jwt = require('jsonwebtoken');
 
 
 const app = express();
- mongoose.connect('mongodb+srv://Srikanth:Srikanth@cluster0.ecee6vq.mongodb.net/?retryWrites=true&w=majority').then(
-  ()=>console.log("DB Connected")
- )
+mongoose.connect('mongodb+srv://Srikanth:Srikanth@cluster0.ecee6vq.mongodb.net/?retryWrites=true&w=majority').then(
+  () => console.log("DB Connected")
+)
 
- app.get("/",(req,res)=>{
+app.get("/", (req, res) => {
   res.send('hi srikanth');
- })
+})
 
 app.use(express.json());
-app.use(cors({origin:'*'}))
+app.use(cors({ origin: '*' }))
 
-app.post('/register',async(req,res) => {
-  try{
-    const {username,email,password,confirmpassword} = req.body;
-    let exist = await Registeruser .findOne({email})
-    if(exist){
+app.post('/register', async (req, res) => {
+  try {
+    const { username, email, password, confirmpassword } = req.body;
+    let exist = await Registeruser.findOne({ email })
+    if (exist) {
       return res.status(400).send('user Already Exist')
     }
-    if(password !== confirmpassword){
+    if (password !== confirmpassword) {
       return res.status(400).send('Passwords are not matching');
 
     }
-    let newUser = new Registeruser ({
+    let newUser = new Registeruser({
       username,
       email,
       password,
@@ -124,60 +124,60 @@ app.post('/register',async(req,res) => {
     res.status(200).send('Register Successfully')
 
   }
-  catch(err){
+  catch (err) {
     console.log(err)
     return res.status(500).send('internal Server Error')
   }
 
 })
-app.post('/login',async(req,res) =>{
-  try{
-    const {email,password} = req.body;
-    let exist = await Registeruser.findOne({email});
-    if(!exist){
+app.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    let exist = await Registeruser.findOne({ email });
+    if (!exist) {
       return res.status(400).send('User Not Found');
     }
-    if (exist.password !== password){
+    if (exist.password !== password) {
       return res.status(400).send('Invalid Credentials');
     }
     let playload = {
-      user:{
-        id : exist.id
+      user: {
+        id: exist.id
       }
     }
-    jwt.sign(playload,'jwtSecret',{expiresIn:3600000},
-      (err,token)=>{
+    jwt.sign(playload, 'jwtSecret', { expiresIn: 3600000 },
+      (err, token) => {
         if (err) throw err;
-        return res.json({token})
+        return res.json({ token })
       }
-      )
+    )
 
 
   }
-  catch(err){
+  catch (err) {
     console.log(err);
     return res.status(5000).send('Server Error')
 
   }
 })
 
-app.get('/myprofile',middleware,async(req,res)=>{
-  try{
+app.get('/myprofile', middleware, async (req, res) => {
+  try {
     let exist = await Registeruser.findById(req.user.id);
-    if(!exist){
+    if (!exist) {
       return res.status(400).send('User Not Found');
     }
     res.json(exist);
 
 
   }
-  catch(err){
+  catch (err) {
     console.log(err);
     return res.status(500).send('server Error')
-    
+
   }
-}) 
+})
 
 
 
- app.listen(5000,()=>console.log('Server running...'));
+app.listen(5000, () => console.log('Server running...'));
