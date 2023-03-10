@@ -95,11 +95,9 @@ const app = express();
 mongoose.connect('mongodb+srv://Srikanth:Srikanth@cluster0.ecee6vq.mongodb.net/?retryWrites=true&w=majority').then(
   () => console.log("DB Connected")
 )
-
 app.get("/", (req, res) => {
   res.send('hi srikanth');
 })
-
 app.use(express.json());
 app.use(cors({ origin: '*' }))
 
@@ -151,8 +149,6 @@ app.post('/login', async (req, res) => {
         return res.json({ token })
       }
     )
-
-
   }
   catch (err) {
     console.log(err);
@@ -160,7 +156,6 @@ app.post('/login', async (req, res) => {
 
   }
 })
-
 app.get('/myprofile', middleware, async (req, res) => {
   try {
     let exist = await Registeruser.findById(req.user.id);
@@ -168,16 +163,10 @@ app.get('/myprofile', middleware, async (req, res) => {
       return res.status(400).send('User Not Found');
     }
     res.json(exist);
-
-
   }
   catch (err) {
     console.log(err);
     return res.status(500).send('server Error')
-
   }
 })
-
-
-
-app.listen(5000, () => console.log('Server running...'));
+app.listen(5000, () => console.log('Server running....'));
